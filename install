@@ -68,7 +68,6 @@ if [ -n "$haPath" ]; then
 
     echo "Removing HACS zip file..."
     rm hacs.zip
-    echo "Installation complete"
     echo -e "${GREEN_COLOR}Installation complete.${NO_COLOR}"
     echo
     echo "Remember to restart Home Assistant before you configure it"

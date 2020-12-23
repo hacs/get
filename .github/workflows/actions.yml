@@ -44,6 +44,15 @@ jobs:
         if: matrix.target.path == '/config'
         run: alias "/config"="/tmp/config"
 
+      - name: ❌ Test no Home Assistant configuration directory
+        run: |
+          set +e
+          bash ./install
+          if [ "$?" != 1 ];then
+            exit 1
+          fi
+          set -e
+
       - name: ✍🏻 Create home-assistant.log
         run: |
           mkdir -p ${{ matrix.target.path }}
@@ -76,3 +85,6 @@ jobs:
           if [ ! -f "${{ matrix.target.path }}/custom_components/hacs/const.py" ]; then
             exit 1
           fi
+
+      - name: 🔼 Run the installer again (upgrade)
+        run: bash ./install
