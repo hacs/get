@@ -1,0 +1,90 @@
+name: "Actions"
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  lint:
+    name: ShellCheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📦 Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: ✅ Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          additional_files: "install"
+
+  test:
+    needs: lint
+    name: Test ${{ matrix.target.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target:
+          - { name: "Current Directory", path: "$PWD" }
+          - { name: "Container", path: "/tmp/config" }
+          - { name: "Venv", path: "$HOME/.homeassistant" }
+          - {
+              name: "Supervised local",
+              path: "/usr/share/hassio/homeassistant",
+            }
+
+    steps:
+      - name: 📦 Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: 🐒 Workaround for action runner limitation
+        if: matrix.target.name == 'Container'
+        run: sed -i 's/"\/config"/"\/tmp\/config"/' install
+
+      - name: ❌ Test no Home Assistant configuration directory
+        run: |
+          set +e
+          bash ./install
+          if [ "$?" != 1 ];then
+            exit 1
+          fi
+          set -e
+
+      - name: ✍🏻 Create home-assistant.log
+        run: |
+          mkdir -p ${{ matrix.target.path }}
+          touch ${{ matrix.target.path }}/home-assistant.log
+
+      - name: 🏃‍♀️ Run the installer
+        run: bash ./install
+
+      - name: 👀 Verify installation
+        run: |
+          if [ ! -f "${{ matrix.target.path }}/custom_components/hacs/const.py" ]; then
+            exit 1
+          fi
+
+      - name: 🗑️ Cleanup
+        run: |
+          rm -rf ${{ matrix.target.path }}/custom_components
+          rm ${{ matrix.target.path }}/home-assistant.log
+
+      - name: ✍🏻 Create .storage and configuration.yaml
+        run: |
+          mkdir -p ${{ matrix.target.path }}/.storage
+          touch ${{ matrix.target.path }}/configuration.yaml
+
+      - name: 🏃‍♂️ Run the installer
+        run: bash ./install
+
+      - name: 👀 Verify installation
+        run: |
+          if [ ! -f "${{ matrix.target.path }}/custom_components/hacs/const.py" ]; then
+            exit 1
+          fi
+
+      - name: 🔼 Run the installer again (upgrade)
+        run: bash ./install
