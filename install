@@ -13,68 +13,67 @@ declare -a paths=(
     "/usr/share/hassio/homeassistant/"
 )
 
+function info () { echo -e "${GREEN_COLOR}INFO: $1${NO_COLOR}";}
+function error () { echo -e "${RED_COLOR}ERROR: $1${NO_COLOR}"; if [ "$2" != "false" ]; then exit 1;fi; }
+
 function checkRequirement () {
     if [ -z "$(command -v "$1")" ]; then
-        echo "'$1' is not installed"
-        exit 1
+        error "'$1' is not installed"
     fi
-}
-
-function findPath () {
-    echo "Trying to find the correct directory..."
-    for path in "${paths[@]}"; do
-        if [ -n "$haPath" ]; then
-            return
-        fi
-
-        if [ -f "$path/home-assistant.log" ]; then
-            haPath="$path"
-        else
-            if [ -d "$path/.storage" ] && [ -f "$path/configuration.yaml" ]; then
-                haPath="$path"
-            fi
-        fi
-    done
 }
 
 checkRequirement "wget"
 checkRequirement "unzip"
-findPath
+
+info "Trying to find the correct directory..."
+for path in "${paths[@]}"; do
+    if [ -n "$haPath" ]; then
+        return
+    fi
+
+    if [ -f "$path/home-assistant.log" ]; then
+        haPath="$path"
+    else
+        if [ -d "$path/.storage" ] && [ -f "$path/configuration.yaml" ]; then
+            haPath="$path"
+        fi
+    fi
+done
 
 if [ -n "$haPath" ]; then
-    echo -e "${GREEN_COLOR}Found Home Assistant configuration directory at '$haPath'${NO_COLOR}"
-    cd "$haPath" || exit 1
-    if [ ! -d "$PWD/custom_components" ]; then
-        echo "Creating custom_components directory..."
-        mkdir custom_components
+    info "Found Home Assistant configuration directory at '$haPath'"
+    cd "$haPath" || error "Could not change path to $haPath"
+    if [ ! -d "$haPath/custom_components" ]; then
+        info "Creating custom_components directory..."
+        mkdir "$haPath/custom_components"
     fi
 
-    echo "Changing to the custom_components directory..."
-    cd custom_components || exit 1
+    info "Changing to the custom_components directory..."
+    cd "$haPath/custom_components" || error "Could not change path to $haPath/custom_components"
 
-    echo "Downloading HACS"
+    info "Downloading HACS"
     wget "https://github.com/hacs/integration/releases/latest/download/hacs.zip" >/dev/null 2>&1
 
-    if [ -d "$PWD/hacs" ]; then
-        echo "HACS directory already exist, cleaning up..."
-        rm -R hacs
+    if [ -d "$haPath/custom_components/hacs" ]; then
+        info "HACS directory already exist, cleaning up..."
+        rm -R "$haPath/custom_components/hacs"
     fi
 
-    echo "Creating HACS directory..."
-    mkdir hacs
+    info "Creating HACS directory..."
+    mkdir "$haPath/custom_components/hacs"
 
-    echo "Unpacking HACS..."
-    unzip hacs.zip -d hacs >/dev/null 2>&1
+    info "Unpacking HACS..."
+    unzip "$haPath/custom_components/hacs.zip" -d "$haPath/custom_components/hacs" >/dev/null 2>&1
 
-    echo "Removing HACS zip file..."
-    rm hacs.zip
-    echo -e "${GREEN_COLOR}Installation complete.${NO_COLOR}"
+    info "Removing HACS zip file..."
+    rm "$haPath/custom_components/hacs.zip"
+    info "Installation complete."
     echo
-    echo "Remember to restart Home Assistant before you configure it"
+    info "Remember to restart Home Assistant before you configure it"
 
 else
     echo
-    echo -e "${RED_COLOR}Could not find the directory for Home Assistant.${NO_COLOR}"
+    error "Could not find the directory for Home Assistant" false
     echo "Manually change the directory to the root of your Home Assistant configuration"
     echo "With the user that is running Home Assistant"
     echo "and run the script again"
