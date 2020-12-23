@@ -53,7 +53,7 @@ if [ -n "$haPath" ]; then
     cd custom_components || exit 1
 
     echo "Downloading HACS"
-    wget "https://github.com/hacs/integration/releases/latest/download/hacs.zip" > /dev/null
+    wget "https://github.com/hacs/integration/releases/latest/download/hacs.zip" >/dev/null 2>&1
 
     if [ -d "$PWD/hacs" ]; then
         echo "HACS directory already exist, cleaning up..."
@@ -64,7 +64,7 @@ if [ -n "$haPath" ]; then
     mkdir hacs
 
     echo "Unpacking HACS..."
-    unzip hacs.zip -d hacs > /dev/null
+    unzip hacs.zip -d hacs >/dev/null 2>&1
 
     echo "Removing HACS zip file..."
     rm hacs.zip

@@ -40,6 +40,9 @@ jobs:
       - name: 📦 Checkout the repository
         uses: actions/checkout@v2
 
+      - name: 🐒 Workaround for action runner limitation
+        run: alias /config=/tmp/config
+
       - name: ✍🏻 Create home-assistant.log
         run: |
           mkdir -p ${{ matrix.target.path }}
