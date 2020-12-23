@@ -23,12 +23,13 @@ jobs:
     needs: lint
     name: Test ${{ matrix.path.name }}
     runs-on: ubuntu-latest
-    matrix:
-      path:
-        - { name: "Current Directory", path: "$PWD" }
-        - { name: "/config", path: "/config" }
-        - { name: "Users Home Directory", path: "$HOME/.homeassistant/" }
-        - { name: "Supervised", path: "/usr/share/hassio/homeassistant/" }
+    strategy:
+      matrix:
+        path:
+          - { name: "Current Directory", path: "$PWD" }
+          - { name: "/config", path: "/config" }
+          - { name: "Users Home Directory", path: "$HOME/.homeassistant/" }
+          - { name: "Supervised", path: "/usr/share/hassio/homeassistant/" }
 
     steps:
       - name: 📦 Checkout the repository
