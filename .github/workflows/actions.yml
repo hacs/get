@@ -29,9 +29,12 @@ jobs:
       matrix:
         target:
           - { name: "Current Directory", path: "$PWD" }
-          - { name: "/config", path: "/config" }
-          - { name: "Users Home Directory", path: "$HOME/.homeassistant/" }
-          - { name: "Supervised", path: "/usr/share/hassio/homeassistant/" }
+          - { name: "Container", path: "/config" }
+          - { name: "Venv", path: "$HOME/.homeassistant/" }
+          - {
+              name: "Supervised local",
+              path: "/usr/share/hassio/homeassistant/",
+            }
 
     steps:
       - name: 📦 Checkout the repository

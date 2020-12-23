@@ -28,10 +28,10 @@ function findPath () {
         fi
 
         if [ -f "$path/home-assistant.log" ]; then
-            haPath=path
+            haPath="$path"
         else
             if [ -d "$path/.storage" ] && [ -f "$path/configuration.yaml" ]; then
-                haPath=path
+                haPath="$path"
             fi
         fi
     done
