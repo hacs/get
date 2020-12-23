@@ -41,7 +41,8 @@ jobs:
         uses: actions/checkout@v2
 
       - name: 🐒 Workaround for action runner limitation
-        run: alias /config=/tmp/config
+        if: matrix.target.path == "/config"
+        run: alias "/config"="/tmp/config"
 
       - name: ✍🏻 Create home-assistant.log
         run: |
