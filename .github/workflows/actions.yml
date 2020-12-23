@@ -18,14 +18,16 @@ jobs:
 
       - name: ✅ Run ShellCheck
         uses: ludeeus/action-shellcheck@master
+        with:
+          additional_files: "install"
 
   test:
     needs: lint
-    name: Test ${{ matrix.path.name }}
+    name: Test ${{ matrix.target.name }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        path:
+        target:
           - { name: "Current Directory", path: "$PWD" }
           - { name: "/config", path: "/config" }
           - { name: "Users Home Directory", path: "$HOME/.homeassistant/" }
@@ -34,3 +36,6 @@ jobs:
     steps:
       - name: 📦 Checkout the repository
         uses: actions/checkout@v2
+
+      - name: test
+        run: echo ${{ matrix.target.path }}
