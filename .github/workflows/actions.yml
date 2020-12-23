@@ -1,11 +1,11 @@
 name: "Actions"
 
 on:
-  push:
-    branch:
-      - main
   pull_request:
-    branch:
+    branches:
+      - "**:**"
+  push:
+    branches:
       - main
 
 jobs:
