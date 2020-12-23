@@ -29,7 +29,7 @@ jobs:
       matrix:
         target:
           - { name: "Current Directory", path: "$PWD" }
-          - { name: "Container", path: "/config" }
+          - { name: "Container", path: "/tmp/config" }
           - { name: "Venv", path: "$HOME/.homeassistant" }
           - {
               name: "Supervised local",
@@ -41,8 +41,8 @@ jobs:
         uses: actions/checkout@v2
 
       - name: 🐒 Workaround for action runner limitation
-        if: matrix.target.path == '/config'
-        run: alias "/config"="/tmp/config"
+        if: matrix.target.name == 'Container'
+        run: sed -i 's/"\/config"/"\/tmp\/config"/' install
 
       - name: ❌ Test no Home Assistant configuration directory
         run: |
