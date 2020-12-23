@@ -30,10 +30,10 @@ jobs:
         target:
           - { name: "Current Directory", path: "$PWD" }
           - { name: "Container", path: "/config" }
-          - { name: "Venv", path: "$HOME/.homeassistant/" }
+          - { name: "Venv", path: "$HOME/.homeassistant" }
           - {
               name: "Supervised local",
-              path: "/usr/share/hassio/homeassistant/",
+              path: "/usr/share/hassio/homeassistant",
             }
 
     steps:
