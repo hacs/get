@@ -40,34 +40,34 @@ jobs:
       - name: 📦 Checkout the repository
         uses: actions/checkout@v2
 
-      - name: Create home-assistant.log
+      - name: ✍🏻 Create home-assistant.log
         run: |
           mkdir -p ${{ matrix.target.path }}
           touch ${{ matrix.target.path }}/home-assistant.log
 
-      - name: Run the installer
+      - name: 🏃‍♀️ Run the installer
         run: bash ./install
 
-      - name: Verify installation
+      - name: 👀 Verify installation
         run: |
           if [ ! -f "${{ matrix.target.path }}/custom_components/hacs/const.py" ]; then
             exit 1
           fi
 
-      - name: Cleanup
+      - name: 🗑️ Cleanup
         run: |
           rm -rf ${{ matrix.target.path }}/custom_components
           rm ${{ matrix.target.path }}/home-assistant.log
 
-      - name: Create .storage and configuration.yaml
+      - name: ✍🏻 Create .storage and configuration.yaml
         run: |
           mkdir -p ${{ matrix.target.path }}/.storage
           touch ${{ matrix.target.path }}/configuration.yaml
 
-      - name: Run the installer
+      - name: 🏃‍♂️ Run the installer
         run: bash ./install
 
-      - name: Verify installation
+      - name: 👀 Verify installation
         run: |
           if [ ! -f "${{ matrix.target.path }}/custom_components/hacs/const.py" ]; then
             exit 1
