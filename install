@@ -1,5 +1,6 @@
 #!/bin/bash
 # curl -sfSL https://hacs.xyz/install | bash -
+set -e
 
 RED_COLOR='\033[0;31m'
 GREEN_COLOR='\033[0;32m'
@@ -30,7 +31,7 @@ checkRequirement "unzip"
 info "Trying to find the correct directory..."
 for path in "${paths[@]}"; do
     if [ -n "$haPath" ]; then
-        return
+        break
     fi
 
     if [ -f "$path/home-assistant.log" ]; then
