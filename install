@@ -10,6 +10,7 @@ NO_COLOR='\033[0m'
 declare haPath
 declare -a paths=(
     "$PWD"
+    "$PWD/config"
     "/config"
     "$HOME/.homeassistant/"
     "/usr/share/hassio/homeassistant/"

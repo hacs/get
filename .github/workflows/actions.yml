@@ -29,6 +29,7 @@ jobs:
       matrix:
         target:
           - { name: "Current Directory", path: "$PWD" }
+          - { name: "Dev setup", path: "$PWD/config" }
           - { name: "Container", path: "/tmp/config" }
           - { name: "Venv", path: "$HOME/.homeassistant" }
           - {
