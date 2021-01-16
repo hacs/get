@@ -10,16 +10,17 @@ on:
 
 jobs:
   lint:
-    name: ShellCheck
+    name: pre-commit
     runs-on: ubuntu-latest
     steps:
       - name: 📦 Checkout the repository
         uses: actions/checkout@v2
 
-      - name: ✅ Run ShellCheck
-        uses: ludeeus/action-shellcheck@master
-        with:
-          additional_files: "install"
+      - name: 📦 Set up Python
+        uses: actions/setup-python@v2
+
+      - name: ✅ Run pre-commit
+        uses: pre-commit/action@v2.0.0
 
   test:
     needs: lint
