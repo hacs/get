@@ -56,9 +56,7 @@ if [ -n "$haPath" ]; then
 
     info "Downloading HACS"
 
-    if [ ! wget "https://github.com/hacs/integration/releases/latest/download/hacs.zip" ]; then
-        exit 1
-    fi    
+    wget "https://github.com/hacs/integration/releases/latest/download/hacs.zip"
 
     if [ -d "$haPath/custom_components/hacs" ]; then
         warn "HACS directory already exist, cleaning up..."
