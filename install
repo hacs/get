@@ -55,8 +55,8 @@ if [ -n "$haPath" ]; then
     cd "$haPath/custom_components" || error "Could not change path to $haPath/custom_components"
 
     info "Downloading HACS"
-    wget "https://github.com/hacs/integration/releases/latest/download/hacs.zip"
-    if [ "$?" != "0" ]; then
+
+    if [ ! wget "https://github.com/hacs/integration/releases/latest/download/hacs.zip" ]; then
         exit 1
     fi    
 
