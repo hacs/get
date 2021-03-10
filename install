@@ -1,5 +1,5 @@
 #!/bin/bash
-# curl -sfSL https://hacs.xyz/install | bash -
+# wget -q -O - https://hacs.xyz/install | bash -
 set -e
 
 RED_COLOR='\033[0;31m'
