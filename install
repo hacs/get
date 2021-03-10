@@ -1,5 +1,5 @@
 #!/bin/bash
-# wget -q -O - https://hacs.xyz/install | bash -
+# wget -q -O - https://install.hacs.xyz | bash -
 set -e
 
 RED_COLOR='\033[0;31m'
