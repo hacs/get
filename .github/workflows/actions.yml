@@ -44,7 +44,7 @@ jobs:
 
       - name: 🐒 Workaround for action runner limitation
         if: matrix.target.name == 'Container'
-        run: sed -i 's/"\/config"/"\/tmp\/config"/' install
+        run: sed -i 's#/config#/tmp/config#' install
 
       - name: ❌ Test no Home Assistant configuration directory
         run: |
