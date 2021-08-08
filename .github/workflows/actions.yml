@@ -37,18 +37,19 @@ jobs:
               name: "Supervised local",
               path: "/usr/share/hassio/homeassistant",
             }
+    defaults:
+      run:
+        shell: bash
 
     steps:
       - name: 📦 Checkout the repository
         uses: actions/checkout@v2.3.4
 
       - name: 🐒 Workaround for action runner limitation
-        shell: bash
         run: sed -i 's#"/config"#"/tmp/config"#' install
         if: matrix.target.name == 'Container'
 
       - name: ❌ Test no Home Assistant configuration directory
-        shell: bash
         run: |
           set +e
           bash ./install
@@ -58,45 +59,37 @@ jobs:
           set -e
 
       - name: ✍🏻 Create home-assistant.log
-        shell: bash
         run: |
           mkdir -p "${{ matrix.target.path }}"
           touch "${{ matrix.target.path }}/home-assistant.log"
 
       - name: 🏃‍♀️ Run the installer
-        shell: bash
         run: bash ./install
 
       - name: 👀 Verify installation
-        shell: bash
         run: |
           if [ ! -f "${{ matrix.target.path }}/custom_components/hacs/const.py" ]; then
             exit 1
           fi
 
       - name: 🗑️ Cleanup
-        shell: bash
         run: |
           rm -rf "${{ matrix.target.path }}/custom_components"
           rm "${{ matrix.target.path }}/home-assistant.log"
 
       - name: ✍🏻 Create .storage and configuration.yaml
-        shell: bash
         run: |
           mkdir -p "${{ matrix.target.path }}/.storage"
           touch "${{ matrix.target.path }}/configuration.yaml"
 
       - name: 🏃‍♂️ Run the installer
-        shell: bash
         run: ./install
 
       - name: 👀 Verify installation
-        shell: bash
         run: |
           if [ ! -f "${{ matrix.target.path }}/custom_components/hacs/const.py" ]; then
             exit 1
           fi
 
       - name: 🔼 Run the installer again (upgrade)
-        shell: bash
         run: ./install
