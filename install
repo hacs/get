@@ -12,8 +12,8 @@ declare -a paths=(
     "$PWD"
     "$PWD/config"
     "/config"
-    "$HOME/.homeassistant/"
-    "/usr/share/hassio/homeassistant/"
+    "$HOME/.homeassistant"
+    "/usr/share/hassio/homeassistant"
 )
 
 function info () { echo -e "${GREEN_COLOR}INFO: $1${NO_COLOR}";}
