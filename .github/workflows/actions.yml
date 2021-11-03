@@ -31,8 +31,7 @@ jobs:
         target:
           - { name: "Current Directory", path: "$PWD" }
           - { name: "Dev setup", path: "$PWD/config" }
-          - { name: "Dev container", path: "/tmp/config" }
-          - { name: "Container", path: "/config" }
+          - { name: "Container", path: "/tmp/config" }
           - { name: "Venv", path: "$HOME/.homeassistant" }
           - {
               name: "Supervised local",
