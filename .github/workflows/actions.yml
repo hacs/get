@@ -44,7 +44,7 @@ jobs:
 
       - name: 🐒 Workaround for action runner limitation
         if: matrix.target.name == 'Container'
-        run: sed -i 's/"\/config"/"\/tmp\/config"/' install
+        run: sed -i 's/"\/config"/"\/tmp\/config"/' get
 
       - name: ❌ Test no Home Assistant configuration directory
         run: |
@@ -60,10 +60,10 @@ jobs:
           mkdir -p ${{ matrix.target.path }}
           touch ${{ matrix.target.path }}/home-assistant.log
 
-      - name: 🏃‍♀️ Run the installer
+      - name: 🏃‍♀️ Run the downloader
         run: bash ./get
 
-      - name: 👀 Verify installation
+      - name: 👀 Verify content
         run: |
           if [ ! -f "${{ matrix.target.path }}/custom_components/hacs/const.py" ]; then
             exit 1
@@ -79,14 +79,14 @@ jobs:
           mkdir -p ${{ matrix.target.path }}/.storage
           touch ${{ matrix.target.path }}/configuration.yaml
 
-      - name: 🏃‍♂️ Run the installer
+      - name: 🏃‍♂️ Run the downloader
         run: bash ./get
 
-      - name: 👀 Verify installation
+      - name: 👀 Verify content
         run: |
           if [ ! -f "${{ matrix.target.path }}/custom_components/hacs/const.py" ]; then
             exit 1
           fi
 
-      - name: 🔼 Run the installer again (upgrade)
+      - name: 🔼 Run the downloader again (upgrade)
         run: bash ./get
