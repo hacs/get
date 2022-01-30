@@ -49,7 +49,7 @@ jobs:
       - name: ❌ Test no Home Assistant configuration directory
         run: |
           set +e
-          bash ./install
+          bash ./get
           if [ "$?" != 1 ];then
             exit 1
           fi
@@ -61,7 +61,7 @@ jobs:
           touch ${{ matrix.target.path }}/home-assistant.log
 
       - name: 🏃‍♀️ Run the installer
-        run: bash ./install
+        run: bash ./get
 
       - name: 👀 Verify installation
         run: |
@@ -80,7 +80,7 @@ jobs:
           touch ${{ matrix.target.path }}/configuration.yaml
 
       - name: 🏃‍♂️ Run the installer
-        run: bash ./install
+        run: bash ./get
 
       - name: 👀 Verify installation
         run: |
@@ -89,4 +89,4 @@ jobs:
           fi
 
       - name: 🔼 Run the installer again (upgrade)
-        run: bash ./install
+        run: bash ./get
