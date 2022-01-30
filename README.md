@@ -1,7 +1,7 @@
-# HACS install script
+# HACS download script
 
 ```bash
-wget -q -O - https://install.hacs.xyz | bash -
+wget -O - https://get.hacs.xyz | bash -
 ```
 
-https://hacs.xyz/docs/installation/installation/
+https://hacs.xyz/docs/setup/prerequisites
