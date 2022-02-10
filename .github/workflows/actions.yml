@@ -84,6 +84,7 @@ jobs:
 
       - name: 👀 Verify content
         run: |
+          touch ${{ matrix.target.path }}/custom_components/file
           if [ ! -f "${{ matrix.target.path }}/custom_components/hacs/const.py" ]; then
             exit 1
           fi
