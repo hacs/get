@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 📦 Checkout the repository
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3
 
       - name: 📦 Set up Python
         uses: actions/setup-python@v3
@@ -40,7 +40,7 @@ jobs:
 
     steps:
       - name: 📦 Checkout the repository
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3
 
       - name: 🐒 Workaround for action runner limitation
         if: matrix.target.name == 'Container'
