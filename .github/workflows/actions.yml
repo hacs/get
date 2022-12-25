@@ -89,6 +89,8 @@ jobs:
           fi
 
       - name: 🔼 Run the downloader again (upgrade)
+        # Here we also test if the get script is executable itself and has a
+        # working shebang set.
         run: |
           touch ${{ matrix.target.path }}/custom_components/file
-          bash ./get
+          ./get
