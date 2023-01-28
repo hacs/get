@@ -5,4 +5,4 @@ repos:
       - id: shellcheck
         args: [-f, gcc]
         types: [text]
-        files: "^install$"
+        files: "^get$"
