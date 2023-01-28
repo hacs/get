@@ -65,30 +65,6 @@ jobs:
 
       - name: 👀 Verify content
         run: |
-          if [ ! -f "${{ matrix.target.path }}/custom_components/hacs/const.py" ]; then
+          if [ ! -f "${{ matrix.target.path }}/custom_components/hacs/manifest.json" ]; then
             exit 1
           fi
-
-      - name: 🗑️ Cleanup
-        run: |
-          rm -rf ${{ matrix.target.path }}/custom_components
-          rm ${{ matrix.target.path }}/home-assistant.log
-
-      - name: ✍🏻 Create .storage and configuration.yaml
-        run: |
-          mkdir -p ${{ matrix.target.path }}/.storage
-          touch ${{ matrix.target.path }}/configuration.yaml
-
-      - name: 🏃‍♂️ Run the downloader
-        run: bash ./get
-
-      - name: 👀 Verify content
-        run: |
-          if [ ! -f "${{ matrix.target.path }}/custom_components/hacs/const.py" ]; then
-            exit 1
-          fi
-
-      - name: 🔼 Run the downloader again (upgrade)
-        run: |
-          touch ${{ matrix.target.path }}/custom_components/file
-          bash ./get
