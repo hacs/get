@@ -22,9 +22,9 @@ jobs:
       - name: ✅ Run pre-commit
         uses: pre-commit/action@v3.0.0
 
-  test:
+  directory:
     needs: lint
-    name: Test ${{ matrix.target.name }}
+    name: Validate directory for ${{ matrix.target.name }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -58,7 +58,7 @@ jobs:
       - name: ✍🏻 Create .HA_VERSION file
         run: |
           mkdir -p ${{ matrix.target.path }}
-          touch ${{ matrix.target.path }}/.HA_VERSION
+          echo "3000.1.1" > ${{ matrix.target.path }}/.HA_VERSION
 
       - name: 🏃‍♀️ Run the downloader
         run: bash ./get
@@ -66,5 +66,54 @@ jobs:
       - name: 👀 Verify content
         run: |
           if [ ! -f "${{ matrix.target.path }}/custom_components/hacs/manifest.json" ]; then
+            exit 1
+          fi
+
+
+  version:
+    needs: lint
+    name: Validate version ${{ matrix.version.current }}-${{ matrix.version.target }} (${{ matrix.version.result }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version:
+          - { current: "2023.1.1", target: "2023.1.1", result: 0 }
+          - { current: "2023.1.1", target: "2023.1.1b4", result: 0 }
+          - { current: "2022.1.1", target: "2023.1.1", result: 1 }
+          - { current: "2022.1.1", target: "2023.1.3", result: 1 }
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Create .HA_VERSION file
+        run: echo "${{ matrix.version.current }}" > .HA_VERSION
+
+      - name: Create fake const.py file
+        run: echo 'MINIMUM_HA_VERSION = "${{ matrix.version.target }}"' > const.py
+
+      - name: Patch script so we can actually check
+        run: sed -i 's|/custom_components/hacs/const.py|/const.py|' get
+
+      - name: Run the script and check result
+        run: |
+          set +e
+          bash ./get
+          if [ "$?" != ${{ matrix.version.result }} ];then
+            exit 1
+          fi
+          set -e
+
+      - name: 👀 Verify content exists
+        if: matrix.version.result == 0
+        run: |
+          if [ ! -f "./custom_components/hacs/manifest.json" ]; then
+            exit 1
+          fi
+
+      - name: 👀 Verify content is missing
+        if: matrix.version.result == 1
+        run: |
+          if [ -f "./custom_components/hacs/manifest.json" ]; then
             exit 1
           fi
