@@ -15,6 +15,14 @@ declare -a paths=(
     "$HOME/.homeassistant"
     "/usr/share/hassio/homeassistant"
 )
+declare currentVersion
+declare currentYear
+declare currentMonth
+declare currentPatch
+declare targetVersion
+declare targetYear
+declare targetMonth
+declare targetPatch
 
 function info () { echo -e "${GREEN_COLOR}INFO: $1${NO_COLOR}";}
 function warn () { echo -e "${GREEN_YELLOW}WARN: $1${NO_COLOR}";}
@@ -65,6 +73,44 @@ if [ -n "$haPath" ]; then
     info "Unpacking HACS..."
     unzip "$haPath/custom_components/hacs.zip" -d "$haPath/custom_components/hacs" >/dev/null 2>&1
 
+
+    if command -v jq; then
+        echo
+        info "Verifying versions"
+        targetVersion=$(jq -r .homeassistant "$haPath/custom_components/hacs/hacs.json")
+        currentVersion=$(cat "$haPath/.HA_VERSION")
+
+        info "Current version is ${currentVersion}, minimum version is ${targetVersion}"
+
+        targetYear=$(echo "${targetVersion}" | cut -d "." -f -1)
+        currentYear=$(echo "${currentVersion}" | cut -d "." -f -1)
+
+        if [ "${currentYear}" -lt "${targetYear}" ]; then 
+            error "Version ${currentVersion} is not new enough, needs at least ${targetVersion}"
+        fi
+
+        if [ "${currentYear}" == "${targetYear}" ]; then 
+            targetMonth=$(echo "${targetVersion}" | cut -d "." -f -2)
+            currentMonth=$(echo "${currentVersion}" | cut -d "." -f -2)
+
+            if [ "${currentMonth}" -lt "${targetMonth}" ]; then 
+                error "Version ${currentVersion} is not new enough, needs at least ${targetVersion}"
+            fi
+
+            if [ "${currentMonth}" == "${targetMonth}" ]; then 
+                targetPatch=$(echo "${targetVersion}" | cut -d "." -f -3)
+                currentPatch=$(echo "${currentVersion}" | cut -d "." -f -3)
+
+                if [ "${currentPatch}" -lt "${targetPatch}" ]; then 
+                    error "Version ${currentVersion} is not new enough, needs at least ${targetVersion}"
+                fi
+            fi
+        fi
+    else
+        warn "Missing jq, could not compare versions. Make sure you have correct minimum version of Home Assistant."
+    fi
+
+    echo
     info "Removing HACS zip file..."
     rm "$haPath/custom_components/hacs.zip"
     info "Installation complete."

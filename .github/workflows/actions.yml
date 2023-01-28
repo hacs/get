@@ -22,9 +22,9 @@ jobs:
       - name: ✅ Run pre-commit
         uses: pre-commit/action@v3.0.0
 
-  test:
+  directory:
     needs: lint
-    name: Test ${{ matrix.target.name }}
+    name: Validate directory for ${{ matrix.target.name }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -41,10 +41,6 @@ jobs:
     steps:
       - name: 📦 Checkout the repository
         uses: actions/checkout@v3
-
-      - name: 🐒 Workaround for action runner limitation
-        if: matrix.target.name == 'Container'
-        run: sed -i 's/"\/config"/"\/tmp\/config"/' get
 
       - name: ❌ Test no Home Assistant configuration directory
         run: |
@@ -68,3 +64,35 @@ jobs:
           if [ ! -f "${{ matrix.target.path }}/custom_components/hacs/manifest.json" ]; then
             exit 1
           fi
+
+
+  version:
+    needs: lint
+    name: Validate version ${{ matrix.target.current }}-${{ matrix.target.target }} (${{ matrix.target.result }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version:
+          - { current: "2023.1.1", target: "2023.1.1", result: 0 }
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Create .HA_VERSION file
+        run: echo "${{ matrix.version.current }}" > .HA_VERSION
+
+      - name: Create fake hacs.json file
+        run: echo '{"homeassistant":"${{ matrix.version.target }}"}' > hacs.json
+
+      - name: Patch script so we can actually check
+        run: sed -i 's/"custom_components\/hacs\/hacs.json"/"hacs.json"/' get
+
+      - name: Run the script and check result
+        run: |
+          set +e
+          bash ./get
+          if [ "$?" != ${{ matrix.version.result }} ];then
+            exit 1
+          fi
+          set -e
