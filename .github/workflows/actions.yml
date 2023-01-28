@@ -55,10 +55,10 @@ jobs:
           fi
           set -e
 
-      - name: ✍🏻 Create home-assistant.log
+      - name: ✍🏻 Create .HA_VERSION file
         run: |
           mkdir -p ${{ matrix.target.path }}
-          touch ${{ matrix.target.path }}/home-assistant.log
+          touch ${{ matrix.target.path }}/.HA_VERSION
 
       - name: 🏃‍♀️ Run the downloader
         run: bash ./get
