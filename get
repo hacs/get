@@ -116,10 +116,6 @@ if [ -n "$haPath" ]; then
     echo
     info "Remember to restart Home Assistant before you configure it"
 
-    for path in $(find "$haPath/custom_components" -maxdepth 1 -type f); do
-        error "Found a file in the custom_components directory: '$path' this should not be there and may cause issues not related to HACS but you will blame HACS so remove it!" false
-    done
-
 else
     echo
     error "Could not find the directory for Home Assistant" false
