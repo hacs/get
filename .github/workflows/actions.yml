@@ -54,7 +54,7 @@ jobs:
       - name: ✍🏻 Create .HA_VERSION file
         run: |
           mkdir -p ${{ matrix.target.path }}
-          touch ${{ matrix.target.path }}/.HA_VERSION
+          echo "3000.1.1" > ${{ matrix.target.path }}/.HA_VERSION
 
       - name: 🏃‍♀️ Run the downloader
         run: bash ./get
@@ -68,7 +68,7 @@ jobs:
 
   version:
     needs: lint
-    name: Validate version ${{ matrix.target.current }}-${{ matrix.target.target }} (${{ matrix.target.result }})
+    name: Validate version ${{ matrix.version.current }}-${{ matrix.version.target }} (${{ matrix.version.result }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -82,11 +82,11 @@ jobs:
       - name: Create .HA_VERSION file
         run: echo "${{ matrix.version.current }}" > .HA_VERSION
 
-      - name: Create fake hacs.json file
-        run: echo '{"homeassistant":"${{ matrix.version.target }}"}' > hacs.json
+      - name: Create fake const.py file
+        run: echo 'MINIMUM_HA_VERSION = "${{ matrix.version.target }}"' > const.py
 
       - name: Patch script so we can actually check
-        run: sed -i 's/"custom_components\/hacs\/hacs.json"/"hacs.json"/' get
+        run: sed -i 's|/custom_components/hacs/const.py|/const.py|' get
 
       - name: Run the script and check result
         run: |
