@@ -76,7 +76,7 @@ if [ -n "$haPath" ]; then
 
     echo
     info "Verifying versions"
-    targetVersion=$(sed -n -e '/^MINIMUM_HA_VERSION/p' "$haPath/custom_components/hacs/const.py" | cut -d " " -f 3)
+    targetVersion=$(sed -n -e '/^MINIMUM_HA_VERSION/p' "$haPath/custom_components/hacs/const.py" | cut -d '"' -f 2)
     currentVersion=$(cat "$haPath/.HA_VERSION")
 
     info "Current version is ${currentVersion}, minimum version is ${targetVersion}"
