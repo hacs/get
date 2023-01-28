@@ -1,0 +1,12 @@
+{
+  "name": "hacs/get",
+  "image": "mcr.microsoft.com/devcontainers/base:debian",
+  "extensions": [
+    "esbenp.prettier-vscode"
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils": {
+      "configureZshAsDefaultShell": true
+    }
+  }
+}

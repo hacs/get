@@ -2,4 +2,4 @@ blank_issues_enabled: false
 contact_links:
   - name: HACS Issue tracker
     url: https://github.com/hacs/integration/issues
-    about: For issues and feature requests related to HACS
+    about: For issues related to HACS
