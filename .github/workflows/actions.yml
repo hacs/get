@@ -42,6 +42,10 @@ jobs:
       - name: 📦 Checkout the repository
         uses: actions/checkout@v3
 
+      - name: 🐒 Workaround for action runner limitation
+        if: matrix.target.name == 'Container'
+        run: sed -i 's/"\/config"/"\/tmp\/config"/' get
+
       - name: ❌ Test no Home Assistant configuration directory
         run: |
           set +e
@@ -74,6 +78,7 @@ jobs:
       matrix:
         version:
           - { current: "2023.1.1", target: "2023.1.1", result: 0 }
+          - { current: "2022.1.1", target: "2023.1.1", result: 1 }
 
     steps:
       - name: Checkout the repository
@@ -96,3 +101,17 @@ jobs:
             exit 1
           fi
           set -e
+
+      - name: 👀 Verify content exists
+        if: matrix.version.result == 0
+        run: |
+          if [ ! -f "${{ matrix.target.path }}/custom_components/hacs/manifest.json" ]; then
+            exit 1
+          fi
+
+      - name: 👀 Verify content is missing
+        if: matrix.version.result == 1
+        run: |
+          if [ -f "${{ matrix.target.path }}/custom_components/hacs/manifest.json" ]; then
+            exit 1
+          fi

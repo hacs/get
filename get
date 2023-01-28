@@ -85,6 +85,7 @@ if [ -n "$haPath" ]; then
     currentYear=$(echo "${currentVersion}" | cut -d "." -f 1)
 
     if [ "${currentYear}" -lt "${targetYear}" ]; then
+        rm -R "$haPath/custom_components/hacs"
         error "Version ${currentVersion} is not new enough, needs at least ${targetVersion}"
     fi
 
@@ -93,6 +94,7 @@ if [ -n "$haPath" ]; then
         currentMonth=$(echo "${currentVersion}" | cut -d "." -f 2)
 
         if [ "${currentMonth}" -lt "${targetMonth}" ]; then
+        rm -R "$haPath/custom_components/hacs"
             error "Version ${currentVersion} is not new enough, needs at least ${targetVersion}"
         fi
 
@@ -101,6 +103,7 @@ if [ -n "$haPath" ]; then
             currentPatch=$(echo "${currentVersion}" | cut -d "." -f 3)
 
             if [ "${currentPatch}" -lt "${targetPatch}" ]; then
+                rm -R "$haPath/custom_components/hacs"
                 error "Version ${currentVersion} is not new enough, needs at least ${targetVersion}"
             fi
         fi
