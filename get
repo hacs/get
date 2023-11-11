@@ -12,6 +12,7 @@ declare -a paths=(
     "$PWD"
     "$PWD/config"
     "/config"
+    "/homeassistant"
     "$HOME/.homeassistant"
     "/usr/share/hassio/homeassistant"
 )
