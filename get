@@ -95,11 +95,12 @@ if [ -n "$haPath" ]; then
         currentMonth=$(echo "${currentVersion}" | cut -d "." -f 2)
 
         if [ "${currentYear}.${currentMonth}" == "2023.12" ]; then
+            rm -R "$haPath/custom_components/hacs"
             error "HACS will currently not work on ${currentYear}.${currentMonth} versions of Home Assistant, latest known working version is 2023.11.3"
         fi
 
         if [ "${currentMonth}" -lt "${targetMonth}" ]; then
-        rm -R "$haPath/custom_components/hacs"
+            rm -R "$haPath/custom_components/hacs"
             error "Version ${currentVersion} is not new enough, needs at least ${targetVersion}"
         fi
 
