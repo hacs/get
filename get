@@ -61,14 +61,13 @@ if [ -n "$haPath" ]; then
     cd "$haPath/custom_components" || error "Could not change path to $haPath/custom_components"
 
     info "Downloading HACS"
+    rm -f "$haPath/custom_components/hacs.zip"
     wget "https://github.com/hacs/integration/releases/latest/download/hacs.zip"
 
     if [ -d "$haPath/custom_components/hacs" ]; then
         warn "HACS directory already exist, cleaning up..."
         rm -R "$haPath/custom_components/hacs"
     fi
-
-    rm -f "$haPath/custom_components/hacs.zip"
 
     info "Creating HACS directory..."
     mkdir "$haPath/custom_components/hacs"
