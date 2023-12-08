@@ -61,6 +61,7 @@ if [ -n "$haPath" ]; then
     cd "$haPath/custom_components" || error "Could not change path to $haPath/custom_components"
 
     info "Downloading HACS"
+    rm -f "$haPath/custom_components/hacs.zip"
     wget "https://github.com/hacs/integration/releases/latest/download/hacs.zip"
 
     if [ -d "$haPath/custom_components/hacs" ]; then
@@ -87,6 +88,7 @@ if [ -n "$haPath" ]; then
 
     if [ "${currentYear}" -lt "${targetYear}" ]; then
         rm -R "$haPath/custom_components/hacs"
+        rm -f "$haPath/custom_components/hacs.zip"
         error "Version ${currentVersion} is not new enough, needs at least ${targetVersion}"
     fi
 
@@ -96,11 +98,13 @@ if [ -n "$haPath" ]; then
 
         if [ "${currentYear}.${currentMonth}" == "2023.12" ]; then
             rm -R "$haPath/custom_components/hacs"
+            rm -f "$haPath/custom_components/hacs.zip"
             error "HACS will currently not work on ${currentYear}.${currentMonth} versions of Home Assistant, latest known working version is 2023.11.3"
         fi
 
         if [ "${currentMonth}" -lt "${targetMonth}" ]; then
             rm -R "$haPath/custom_components/hacs"
+            rm -f "$haPath/custom_components/hacs.zip"
             error "Version ${currentVersion} is not new enough, needs at least ${targetVersion}"
         fi
 
@@ -110,6 +114,7 @@ if [ -n "$haPath" ]; then
 
             if [ "${currentPatch}" -lt "${targetPatch}" ]; then
                 rm -R "$haPath/custom_components/hacs"
+                rm -f "$haPath/custom_components/hacs.zip"
                 error "Version ${currentVersion} is not new enough, needs at least ${targetVersion}"
             fi
         fi
@@ -117,7 +122,7 @@ if [ -n "$haPath" ]; then
 
     echo
     info "Removing HACS zip file..."
-    rm "$haPath/custom_components/hacs.zip"
+    rm -f "$haPath/custom_components/hacs.zip"
     info "Installation complete."
     echo
     info "Remember to restart Home Assistant before you configure it"

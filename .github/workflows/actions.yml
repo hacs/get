@@ -68,6 +68,9 @@ jobs:
           if [ ! -f "${{ matrix.target.path }}/custom_components/hacs/manifest.json" ]; then
             exit 1
           fi
+          if [ -f "${{ matrix.target.path }}/custom_components/hacs.zip" ]; then
+            exit 1
+          fi
 
 
   version:
@@ -116,5 +119,10 @@ jobs:
         if: matrix.version.result == 1
         run: |
           if [ -f "./custom_components/hacs/manifest.json" ]; then
+            exit 1
+          fi
+      - name: 👀 Verify cleanup
+        run: |
+          if [ -f "${{ matrix.target.path }}/custom_components/hacs.zip" ]; then
             exit 1
           fi
