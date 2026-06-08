@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 📦 Checkout the repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v6.0.3
 
       - name: 📦 Set up Python
         uses: actions/setup-python@v6.2.0
@@ -40,7 +40,7 @@ jobs:
 
     steps:
       - name: 📦 Checkout the repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v6.0.3
 
       - name: 🐒 Workaround for action runner limitation
         if: matrix.target.name == 'Container'
@@ -88,7 +88,7 @@ jobs:
 
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v6.0.3
 
       - name: Create .HA_VERSION file
         run: echo "${{ matrix.version.current }}" > .HA_VERSION
