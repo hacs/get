@@ -66,7 +66,7 @@ function run() {
             else
                 marketplaceDocs="https://www.home-assistant.io/integrations/marketplace"
             fi
-            error "HACS is not supported on Home Assistant 2026.11 and newer (found ${currentVersion}), it has been replaced by the native Marketplace integration. See ${marketplaceDocs}"
+            error "HACS does not work on Home Assistant 2026.11 and newer (found ${currentVersion}), as it has been replaced by the native Marketplace integration. See ${marketplaceDocs}"
         fi
 
         cd "$haPath" || error "Could not change path to $haPath"
