@@ -58,7 +58,7 @@ jobs:
       - name: ✍🏻 Create .HA_VERSION file
         run: |
           mkdir -p ${{ matrix.target.path }}
-          echo "3000.1.1" > ${{ matrix.target.path }}/.HA_VERSION
+          echo "2026.10.0" > ${{ matrix.target.path }}/.HA_VERSION
 
       - name: 🏃‍♀️ Run the downloader
         run: bash ./get
@@ -85,6 +85,11 @@ jobs:
           - { current: "2022.1.1", target: "2023.1.1", result: 1 }
           - { current: "2022.1.1", target: "2023.1.3", result: 1 }
           - { current: "2023.12.0", target: "2023.1.3", result: 1 }
+          - { current: "2026.10.5", target: "2023.1.1", result: 0 }
+          - { current: "2026.11.0", target: "2023.1.1", result: 1 }
+          - { current: "2026.11.0b0", target: "2023.1.1", result: 1 }
+          - { current: "2026.12.0.dev20261101", target: "2023.1.1", result: 1 }
+          - { current: "2027.1.0", target: "2023.1.1", result: 1 }
 
     steps:
       - name: Checkout the repository
@@ -124,5 +129,43 @@ jobs:
       - name: 👀 Verify cleanup
         run: |
           if [ -f "${{ matrix.target.path }}/custom_components/hacs.zip" ]; then
+            exit 1
+          fi
+
+  marketplace:
+    needs: lint
+    name: Validate Marketplace message for ${{ matrix.version.current }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version:
+          - { current: "2026.11.0", url: "https://www.home-assistant.io/integrations/marketplace" }
+          - { current: "2026.11.0b1", url: "https://rc.home-assistant.io/integrations/marketplace" }
+          - { current: "2026.12.0.dev20261101", url: "https://next.home-assistant.io/integrations/marketplace" }
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v6.0.3
+
+      - name: Create .HA_VERSION file
+        run: echo "${{ matrix.version.current }}" > .HA_VERSION
+
+      - name: Run the script and check result
+        run: |
+          set +e
+          output=$(bash ./get 2>&1)
+          result=$?
+          set -e
+          echo "$output"
+          if [ "$result" != 1 ]; then
+            exit 1
+          fi
+          if ! echo "$output" | grep -qF "${{ matrix.version.url }}"; then
+            exit 1
+          fi
+
+      - name: 👀 Verify nothing was downloaded
+        run: |
+          if [ -e "./custom_components" ]; then
             exit 1
           fi
