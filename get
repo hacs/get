@@ -19,6 +19,7 @@ function run() {
         "/usr/share/hassio/homeassistant"
     )
     declare currentVersion
+    declare marketplaceDocs
     declare currentYear
     declare currentMonth
     declare currentPatch
@@ -53,6 +54,21 @@ function run() {
 
     if [ -n "$haPath" ]; then
         info "Found Home Assistant configuration directory at '$haPath'"
+        currentVersion=$(cat "$haPath/.HA_VERSION")
+        currentYear=$(echo "${currentVersion}" | cut -d "." -f 1)
+        currentMonth=$(echo "${currentVersion}" | cut -d "." -f 2)
+
+        if [ "${currentYear}" -gt 2026 ] || { [ "${currentYear}" -eq 2026 ] && [ "${currentMonth}" -ge 11 ]; }; then
+            if [[ "${currentVersion}" == *dev* ]]; then
+                marketplaceDocs="https://next.home-assistant.io/integrations/marketplace"
+            elif [[ "${currentVersion}" == *b* ]]; then
+                marketplaceDocs="https://rc.home-assistant.io/integrations/marketplace"
+            else
+                marketplaceDocs="https://www.home-assistant.io/integrations/marketplace"
+            fi
+            error "HACS does not work on Home Assistant 2026.11 and newer (found ${currentVersion}), as it has been replaced by the native Marketplace integration. See ${marketplaceDocs}"
+        fi
+
         cd "$haPath" || error "Could not change path to $haPath"
         if [ ! -d "$haPath/custom_components" ]; then
             info "Creating custom_components directory..."
@@ -81,7 +97,6 @@ function run() {
         echo
         info "Verifying versions"
         targetVersion=$(sed -n -e '/^MINIMUM_HA_VERSION/p' "$haPath/custom_components/hacs/const.py" | cut -d '"' -f 2)
-        currentVersion=$(cat "$haPath/.HA_VERSION")
 
         info "Current version is ${currentVersion}, minimum version is ${targetVersion}"
 
