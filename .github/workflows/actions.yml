@@ -8,6 +8,8 @@ on:
     branches:
       - main
 
+permissions: {}
+
 jobs:
   lint:
     name: pre-commit
@@ -15,9 +17,11 @@ jobs:
     steps:
       - name: 📦 Checkout the repository
         uses: actions/checkout@v6.0.3
+        with:
+          persist-credentials: false
 
       - name: 📦 Set up Python
-        uses: actions/setup-python@v6.2.0
+        uses: actions/setup-python@v7.0.0
 
       - name: ✅ Run pre-commit
         uses: pre-commit/action@v3.0.1
@@ -41,6 +45,8 @@ jobs:
     steps:
       - name: 📦 Checkout the repository
         uses: actions/checkout@v6.0.3
+        with:
+          persist-credentials: false
 
       - name: 🐒 Workaround for action runner limitation
         if: matrix.target.name == 'Container'
@@ -94,6 +100,8 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v6.0.3
+        with:
+          persist-credentials: false
 
       - name: Create .HA_VERSION file
         run: echo "${{ matrix.version.current }}" > .HA_VERSION
